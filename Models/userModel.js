@@ -31,14 +31,18 @@ const userSchema = new mongoose.Schema(
       default:
         "https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg",
     },
-    followers: {
-      type: [String],
-      default: [],
-    },
-    following: {
-      type: [String],
-      default: [],
-    },
+    followers: [
+      {
+        id: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // reference to User
+        username: { type: String, required: true },
+      },
+    ],
+    following: [
+      {
+        id: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // reference to User
+        username: { type: String, required: true },
+      },
+    ],
     bio: {
       type: String,
       default: "",
@@ -48,6 +52,6 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-  
+
 const user = mongoose.model("User", userSchema);
 export default user;

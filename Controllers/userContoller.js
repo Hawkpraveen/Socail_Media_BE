@@ -188,18 +188,19 @@ export const followUnFollowUser = async (req, res) => {
       return res.status(400).json({ error: "You cannot follow/unfollow yourself" });
     }
 
-    const isFollowing = currentUser.following.includes(id);
+    // Check if the current user is following the user to modify
+    const isFollowing = currentUser.following.some(followingUser => followingUser.id.toString() === id);
 
     if (isFollowing) {
       // Unfollow user
       await user.findByIdAndUpdate(
         id,
-        { $pull: { followers: req.user._id } },
+        { $pull: { followers: { id: req.user._id } } }, // Pull by ID only
         { new: true } // Return the modified document
       );
       await user.findByIdAndUpdate(
         req.user._id,
-        { $pull: { following: id } },
+        { $pull: { following: { id: id } } }, // Pull by ID only
         { new: true } // Return the modified document
       );
 
@@ -215,12 +216,12 @@ export const followUnFollowUser = async (req, res) => {
       // Follow user
       await user.findByIdAndUpdate(
         id,
-        { $push: { followers: req.user._id } },
+        { $push: { followers: { id: req.user._id, username: currentUser.username } } }, // Push object
         { new: true } // Return the modified document
       );
       await user.findByIdAndUpdate(
         req.user._id,
-        { $push: { following: id } },
+        { $push: { following: { id: id, username: userToModify.username } } }, // Push object
         { new: true } // Return the modified document
       );
 
@@ -238,3 +239,4 @@ export const followUnFollowUser = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" }); // Use a generic error message for security
   }
 };
+

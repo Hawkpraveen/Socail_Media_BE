@@ -5,28 +5,26 @@ import cors from "cors";
 import userRouter from "./Routers/userRouter.js";
 import postRouter from "./Routers/postRouter.js";
 import { v2 as cloudinary } from "cloudinary";
+import messageRouter from "./Routers/messageRouter.js";
+import { app, server } from "./Socket/socket.js";
 
-const app = express();
+//const app = express();
 
 dotenv.config();
 
-
 app.use(express.json({ limit: "50mb" })); // To parse JSON data in the req.body
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
-
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 cloudinary.config({
-	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
 
 connectDb();
 app.get("/", (req, res) => {
@@ -37,9 +35,10 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRouter);
 app.use("/api/post", postRouter);
+app.use("/api/messages", messageRouter);
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Server running on....`);
+server.listen(port, () => {
+  console.log(`Server running on.... `);
 });
