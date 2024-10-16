@@ -216,12 +216,28 @@ export const followUnFollowUser = async (req, res) => {
       // Follow user
       await user.findByIdAndUpdate(
         id,
-        { $push: { followers: { id: req.user._id, username: currentUser.username } } }, // Push object
+        {
+          $push: {
+            followers: {
+              id: req.user._id,
+              username: currentUser.username,
+              profilePic: currentUser.profilePic, // Add profile pic
+            }
+          }
+        },
         { new: true } // Return the modified document
       );
       await user.findByIdAndUpdate(
         req.user._id,
-        { $push: { following: { id: id, username: userToModify.username } } }, // Push object
+        {
+          $push: {
+            following: {
+              id: id,
+              username: userToModify.username,
+              profilePic: userToModify.profilePic, // Add profile pic
+            }
+          }
+        },
         { new: true } // Return the modified document
       );
 
@@ -239,4 +255,5 @@ export const followUnFollowUser = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" }); // Use a generic error message for security
   }
 };
+
 
