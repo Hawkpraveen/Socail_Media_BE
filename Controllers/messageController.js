@@ -27,7 +27,7 @@ export const sendMessage = async (req, res) => {
         receiverId,
         message,
         conversationId: conversation._id,
-      }).populate('senderId', 'profilePic'); // Populate senderId
+      }) // Populate senderId
   
       if (newMessage) {
         conversation.messages.push(newMessage._id);
