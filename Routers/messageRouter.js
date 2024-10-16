@@ -4,7 +4,8 @@ import { getMessage, sendMessage } from "../Controllers/messageController.js";
 
 const router = express.Router();
 
-router.get("/all/:id", authUser,getMessage );
-router.post("/send/:id", authUser, sendMessage);
+router.get("/conversation/:id", authUser, getMessage); // Fetch conversation
+router.post("/message/:id", authUser, sendMessage); // Send message
+
 
 export default router;

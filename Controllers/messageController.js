@@ -50,7 +50,7 @@ export const sendMessage = async (req, res) => {
       return res.status(500).json({ success: false, message: "Failed to send message." });
     }
   };
-  
+    
   export const getMessage = async (req, res) => {
     try {
       const senderId = req.user.id; // Ensure this is populated correctly
